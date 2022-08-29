@@ -12,17 +12,10 @@ public class MailAPI {
     SendMailService sendMailService;
 
     @GetMapping()
-    public boolean send(@RequestParam("email") String email){
+    public String send(@RequestParam("email") String email){
 
         return sendMailService.sendMail(email,
                 "Xác nhận tài khoản","Mã xác nhận của bạn là: ");
     }
-    @GetMapping("/confirm")
-    public String confirm(@RequestParam("code") String code){
-        return sendMailService.confirmCode(code);
-    }
-    @GetMapping("/resetcode")
-    public void resetcode(){
-        sendMailService.rsCode();
-    }
+
 }

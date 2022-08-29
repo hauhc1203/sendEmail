@@ -13,15 +13,15 @@ import javax.mail.internet.MimeMessage;
 public class SendMailService {
     @Autowired
     JavaMailSender mailSender;
-    String superCode="asj1hxnqj11$^&**()(*&^%$@!#$%^&*((*&^((*&^yhHJHVUHJK2";
-    String code=superCode;
+//    String superCode="asj1hxnqj11$^&**()(*&^%$@!#$%^&*((*&^((*&^yhHJHVUHJK2";
+//    String code=superCode;
      String [] upper={ "A", "B", "C", "D", "E", "F", "G", "H", "I" ,"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-     String [] lower={"a", "b", "c", "d", "e", "f", "g", "h" ,"i" ,"k" , "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+     String [] lower={ "a", "b", "c", "d", "e", "f", "g", "h" ,"i","j" ,"k" , "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
      int [] number={0,1,2,3,4,5,6,7,8,9};
 
      int size1=upper.length-1;
      int size2=number.length-1;
-    public    int makeRandom(int min, int max){
+    public  int makeRandom(int min, int max){
         return (int) ((Math.random())*((max-min)+1)+min);
     }
 
@@ -43,45 +43,29 @@ public class SendMailService {
             }
         }
 
-
-
-        code=newCode;
         return newCode;
     }
 
 
-    public boolean sendMail(String toMail,String subject,String content){
-
+    public String sendMail(String toMail,String subject,String content){
+        String code=createCode();
 
         SimpleMailMessage message =new SimpleMailMessage();
         message.setFrom("hch.123.shop@gmail.com");
         message.setTo(toMail);
         message.setSubject(subject);
-        message.setText(content+createCode());
-//        Message message1=new MimeMessage();
+        message.setText(content+code);
+
         try {
             mailSender.send(message);
-            return true;
+            return code;
         }catch (MailException mailException){
-            System.out.println("loi roi"+mailException.getMessage());
-            return false;
+
+            return "";
         }
 
     }
 
-    public String confirmCode(String code1)
-    {
-        if (code1.equals(code)){
-            rsCode();
-            return "Xác nhận thành công";
 
-        }else {
-            return "Xác nhận thất bại";
-        }
-    }
-
-    public void rsCode(){
-        code=superCode;
-    }
 
 }

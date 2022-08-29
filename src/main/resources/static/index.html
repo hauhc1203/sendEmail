@@ -7,104 +7,78 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
         .a1{
-                width: 120px;
+            width: 120px;
             }
         .a2{
             width: 200px;
         }
         .a3{
-            width: 380px;
-            height: 50px;
+            width:400px;
+            height: 30px;
+            display: flex;
+            justify-content: left;
+            padding-bottom: 10px;
+        }
+        #block1{
+            width: 300px ;
+            margin: auto;
+            margin-bottom: 10px;
+        }
+        #btn1{
+            width: 200px;
+            margin: auto;
             display: flex;
             justify-content: space-between;
+        }
+        #loader {
+            display: none;
+            margin: auto;
+
+            border: 3px solid #f3f3f3; /* Light grey */
+            border-top: 3px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-<div style="width: 400px;height: auto;margin: auto;">
-    <div class="a3"><p class="a1">Email:</p> <input class="a2"  type="email" id="m" placeholder="nhap vao email"></div>
-    <div class="a3"><p class="a1">User Name: </p><input class="a2" type="text" placeholder="nhap vao username"></div>
-    <div class="a3"><p class="a1">Pass:</p> <input class="a2" type="text" placeholder="nhap vao pass"></div>
-    <div class="a3" id="cfcode" style="display: none">
-        <p class="a1">Ma xac nhan</p><input type="text" placeholder="mã xác nhận" id="mxn">
-        <button id="cfbtn" style="width: 150px;" onclick="cf1()">
-            <p style="margin-top: 6px;margin-bottom: 0px">Xác Nhận Mã</p>
-            <p id="cd" style="margin-top: 4px;color: orange">60s</p>
-        </button>
+<div style="width: 400px;height: auto;margin: auto; margin-top: 100px   ;border: black solid 1px; padding: 10px">
+
+
+    <div id="block1">
+        <div class="a3">
+            <p class="a1">Email:</p>
+            <input class="a2"  type="email" id="m" placeholder="nhap vao email" value="98katana98@gmail.com">
+        </div>
+        <div class="a3"><p class="a1">User Name: </p><input class="a2" type="text" placeholder="nhap vao username"></div>
+        <div class="a3"><p class="a1">Pass:</p> <input class="a2" type="text" placeholder="nhap vao pass"></div>
+        <div id="loader"></div>
+        <div class="a3" id="cfcode" style="display: none">
+            <p class="a1">Ma xac nhan</p><input style="width: 80px" type="text" placeholder="mã xác nhận" id="mxn">
+            <button id="cfbtn" style="width: 100px;margin-left: 10px" onclick="cf1() ">
+                <p style="margin-top: 2px;margin-bottom: 0px; font-size: 10px">Xác Nhận Mã</p>
+                <p id="cd" style="margin-top: 2px;color: orange;font-size: 10px"></p>
+            </button>
+        </div>
     </div>
-    <button onclick="getInfo()"> Xác Nhận</button>
-    <button onclick="getCode()"> Gui lai ma</button>
+    <div id="btn1" >
+        <button onclick="getInfo()"> Xác Nhận</button>
+        <button onclick="getCode()"> Gui lai ma</button>
+    </div>
 </div>
 
 </body>
 </html>
-<script>
-    let mail;
-    let loop;
-    function getInfo(){
-        mail=document.getElementById("m").value
-        getCode()
-    }
-    function getCode(){
-        clearInterval(loop)
-        $.ajax(
-            {
-                type:"GET",
-
-                url:"http://localhost:8080/mail?email="+mail,
-                success: function (data) {
-                       waitConfirm();
-                },
-                error: function (err) {
-                    console.log(err)
-                }
-            }
-
-        )
-    }
-    function waitConfirm(){
-        document.getElementById("cfcode").style.display="flex"
-        let time=60
-          loop= setInterval(function (){
-                if (time>0){
-                document.getElementById("cd").innerHTML=time+"s"
-                time--;
-                }else {
-                    document.getElementById("cfbtn").disabled = true;
-                    document.getElementById("cd").innerText="code het han"
-                    clearInterval(loop)
-                    $.ajax({
-                        type:"GET",
-                        url:"http://localhost:8080/mail/resetcode",
-                        success: function (data) {
-                        },
-                        error: function (err) {
-                            console.log(err)
-                        }
-
-                    })
-                }
-            },1000)
-
-    }
-
-
-    function cf1(){
-        let code=document.getElementById("mxn").value
-        $.ajax(
-            {
-                type:"GET",
-
-                url:"http://localhost:8080/mail/confirm?code="+code,
-                success: function (data) {
-                    alert(data)
-                },
-                error: function (err) {
-                    console.log(err)
-                }
-            }
-
-        )
-    }
-</script>
+<script src="script.js"></script>
