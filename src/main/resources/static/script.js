@@ -8,9 +8,8 @@ function getInfo(){
     if (mail!=""){
         getCode()
     }
-
-
 }
+
 function getCode(){
     load.style.display="flex"
     clearInterval(loop)
@@ -21,6 +20,8 @@ function getCode(){
             success: function (data) {
                 load.style.display="none"
                 code=data;
+                window.localStorage.setItem("code",data)
+
                 waitConfirm();
             },
             error: function (err) {

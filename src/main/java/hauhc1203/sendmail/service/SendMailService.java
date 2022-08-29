@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 
 @Service
 public class SendMailService {
@@ -50,11 +53,45 @@ public class SendMailService {
     public String sendMail(String toMail,String subject,String content){
         String code=createCode();
 
-        SimpleMailMessage message =new SimpleMailMessage();
-        message.setFrom("hch.123.shop@gmail.com");
-        message.setTo(toMail);
-        message.setSubject(subject);
-        message.setText(content+code);
+//        SimpleMailMessage message =new SimpleMailMessage();
+        String toAddress = toMail;
+        String fromAddress = "hch.123.shop@gmail.com";
+        String senderName = "Your company name";
+         subject = "Please verify your registration";
+         content = "Dear [[name]],<br>"
+                + "Please click the link below to verify your registration:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Thank you,<br>"
+                 +"<button > Xác Nhận</button>"
+                + "Your company name.";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        try {
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", "user.getFullName()");
+//            String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
+
+            content = content.replace("[[URL]]", code);
+
+            helper.setText(content, true);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+//
+//        mailSender.send(message);
+//        message.setFrom("hch.123.shop@gmail.com");
+//        message.setTo(toMail);
+//        message.setSubject(subject);
+//        message.setText(content+code);
 
         try {
             mailSender.send(message);
